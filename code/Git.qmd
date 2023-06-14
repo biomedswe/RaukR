@@ -17,7 +17,7 @@ git_sitrep()
 Set user name etc. should be the same as on your github.
 
 ```{r}
-usethis::use_git_config(user.name = "biomedswe", user.email = "jonas.anderzzon@med.lu.se")
+usethis::use_git_config(user.name = "biomedswe", user.email = "jonas.andersson@med.lu.se")
 ```
 
 #### Personal Access Token (PAT)
