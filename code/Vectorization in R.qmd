@@ -1,0 +1,199 @@
+---
+title: "Vectorization"
+format: html
+editor: visual
+---
+
+# Vectorization in R - Lecture
+
+RaukR 2023 • Advanced R for Bioinformatics
+
+Marcin Kierczak
+
+12-Jun-2023
+
+## The simplest of all `for` loops
+
+Say, we want to add 1 to every element of a vector:
+
+```{r}
+vec <- c(1:5)
+vec
+for (i in vec) {
+  vec[i] <- vec[i] + 1
+}
+vec
+```
+
+Exactly the same can be achieved in R by means of **vectorization**:
+
+```{r}
+vec <- c(1:5)
+vec + 1
+```
+
+## Repeating actions --- vectorization
+
+Let us compare the time of execution of the vectorized version (vector with 10,000 elements):
+
+```{r}
+library(peakRAM)
+vec <- c(1:1e6)
+peakRAM::peakRAM(vec <- vec + 1)
+```
+
+to the loop version:
+
+```{r}
+vec <- c(1:1e6)
+loop <- function(vec) {
+  for (i in vec) {
+    vec[i] <- vec[i] + 1
+  }
+  return(vec)
+}
+peakRAM::peakRAM(loop(vec))
+```
+
+## Vectorization --- the problem
+
+```{r}
+is_a_droid <- function(x) {
+  droids <- c('2-1B', '4-LOM', '8D8', '0-0-0', 'AP-5', 'AZI-3', 'Mister Bones', 'BB-8', 'BB-9E', 'BD-1', 'BT-1', 'C1-10P', 'C-3PO', 'R2-D2')
+  if (x %in% droids) {
+    return(T)
+  } else {
+    return(F)
+  }
+}
+
+test <- c('Anakin', 'Vader', 'R2-D2', 'AZI-3', 'Luke')
+is_a_droid(test)
+```
+
+## Vectorization --- the solution(s)
+
+The `base::Vectorize` way:
+
+```{r}
+vectorized_is_a_droid <- base::Vectorize(is_a_droid, vectorize.args = c('x'))
+vectorized_is_a_droid(test)
+```
+
+The `apply*` way:
+
+```{r}
+apply(as.matrix(test), FUN = is_a_droid, MARGIN = 1)
+```
+
+```{r}
+lapply(test, FUN=is_a_droid) %>% unlist() # list apply, unlist to get nicer output
+```
+
+```{r}
+sapply(test, is_a_droid) # simplified lapply
+```
+
+The `vapply`:
+
+```{r}
+vapply(test, is_a_droid, FUN.VALUE = TRUE) # value type-safe sapply 
+vapply(test, is_a_droid, FUN.VALUE = 1)
+```
+
+Or the `purrr` way:
+
+```{r}
+library(tidyverse)
+purrr::map(test, is_a_droid) %>% unlist()
+```
+
+# **Vectorization Lab**
+
+## **1 Task 1: A large matrix**
+
+### **1.1 Looping over a matrix**
+
+-   Create a 100000 by 10 matrix with the numbers 1:1000000
+
+-   Write a `for`-loop that calculates the sum for each row of the matrix.
+
+```{r}
+m <- matrix(data = 1:1000000, nrow = 100000, ncol = 10)  
+
+for_sum <- vector(mode = 'integer', length = 100000) 
+for (row in 1:nrow(m)) {   
+  for_sum[row] <- sum(m[row,]) 
+}  
+
+```
+
+-   Verify that your row counts are consistent with what you obtain with the `apply()` function
+
+    ```{r}
+    # na.rm passes TRUE to FUN = sum through ... 
+    app_sum <- apply(X = m, MARGIN = 1, FUN = sum, na.rm = TRUE)
+    ```
+
+-   Verify that your row counts are consistent with what you obtain with the `apply()` function `rowSums()` function
+
+```{r}
+rowSums_sum <- rowSums(x = m)
+```
+
+-   Check whether the counts are identical
+
+```{r}
+identical(for_sum, app_sum)  
+identical(for_sum, as.integer(rowSums_sum))
+```
+
+## **2 Task 2: Fibonacci sequence**
+
+During the lecture an approach to calculate factorials was implemented using recursion (function calling itself). Here we should use recursion to generate a sequence of Fibonacci numbers. A Fibonacci number is part of a series of number with the following properties:
+
+-   the first two numbers in the Fibonacci sequence are either 1 and 1, or 0 and 1 (depending on the chosen starting point)
+
+-   each subsequent number is the sum of the previous two. Hence:
+
+`0, 1, 1, 2, 3, 5, 8, 13, 21, ...`
+
+or
+
+`1, 1, 2, 3, 5, 8, 13, 21, ...`
+
+### **2.1 N-th Fibonacci number**
+
+Write a function that generates Fibonacci number using a recursive approach.
+
+```{r}
+fibonacci <- function(n) {   
+  if (n == 0 || n == 1) {     
+    return(n)   
+    }   
+  else {     
+    return(fibonacci(n - 1) + fibonacci(n - 2))   
+    }    
+  }   
+fibonacci(3)
+```
+
+### **2.2 Generate Fibonacci sequence**
+
+Generate Fibonacci numbers from 0 to 10 using `*apply*` approach.
+
+```{r}
+# applies fibonacci on 0 to 10 
+sapply(0:2, FUN = fibonacci)
+```
+
+### **2.3 Vectorized Fibonacci generator**
+
+Vectorize your Fibonacci number generating function.
+
+```{r}
+vec_fib_rec <- Vectorize(fibonacci) 
+vec_fib_rec(0:10)
+```
+
+# 

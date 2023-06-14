@@ -1,0 +1,196 @@
+1.1 Task: Valid Variable Names.
+Which of the following are valid/good variable names in R. What is wrong with the ones that are invalid/bad?
+
+var1: valid
+
+3way_handshake : Cannot begin with a number
+
+.password : valid, will be a hidden variable
+
+__test__ : cannot begin with an underscore
+
+my-matrix-M : cannot contain hyphens
+
+three.dimensional.array : valid
+
+3D.distance : cannot begin with a number
+
+.2objects : dot cannot be followed by a number
+
+wz3gei92 : valid but inpractical
+
+next : cannot use a reserved word
+
+P : valid
+
+Q : valid
+
+R : valid
+
+S : valid
+
+T : can be used, but shouldn't because T also stands for TRUE
+
+X : valid
+
+is.larger? : cannot contain question mark
+
+
+# 1.2 Task: Obscure Code.
+**The code below works, but can be improved. Do improve it!**
+```{r}
+myIterAtoR.max <- 5
+second_iterator.max<-7
+col.NUM= 10
+row.cnt =10
+
+
+fwzy45 <- matrix(rep(1, col.NUM*row.cnt),nrow=row.cnt)
+
+for(haystack in (2-1):col.NUM){
+  for(needle in 1:row.cnt) {
+    if(haystack>=myIterAtoR.max){
+      fwzy45[haystack, needle]<-NA}
+  }}
+
+
+
+# Improved code
+iter_max <- 5
+col_num <- 10
+row_num <- 10
+
+A <- matrix(data = rep(x = 1, times = col_num*row_num), nrow = row_num)
+
+for(i in 1:col_num){
+  for(j in 1:row_num) {
+    if (i >= iter_max) {
+      A[i,j] <- NA
+    } 
+  }
+}
+```
+
+# 1.3 Task: Better Formatting.
+**Improve formatting and style of the following code:**
+
+```{r}
+simulate_genotype <- function( q, N=100 ) {
+  if( length(q)==1 ){
+    p <- (1 - q)
+    f_gt <- c(p^2, 2*p*q, q^2) # AA, AB, BB
+  }else{
+    f_gt<-q
+  }
+  tmp <- sample( c('AA','AB','BB'), size =N, prob=f_gt, replace=T )
+  return(tmp)
+}
+
+# Improved code
+simulate_genotype <- function(q, N=100) {
+  if (length(q) == 1) {
+    p <- (1 - q)
+    f_gt <- c(p^2, 2 * p * q, q^2) # AA, AB, BB
+  }
+  
+  else {
+    f_gt<-q
+  }
+  
+  sample(c('AA','AB','BB'),
+         size =N, 
+         prob=f_gt, 
+         replace=TRUE)
+}
+```
+
+# 1.4 Task: Hidden Variable.
+**Assign a vector of three last months (abbreviated in English) in a year to a hidden variable *my_months.**
+```{r}
+
+#rev(month.abb) gives dec-jan, [1:3] gives dec, nov, oct, rev(rev(month.abb)[1:3]) gives oct, nov, dec
+.my_months <- rev(rev(month.abb)[1:3])
+
+```
+
+# 1.5 Task: Pipeline-friendly Function.
+**Modify the function below so that it works with R pipes %>%:**
+
+```{r}
+library(tidyverse)
+
+my_filter <- function(threshold = 1, x, scalar = 5) {
+  x[x >= threshold] <- NA 
+  x <- x * scalar
+  return(x)
+}
+
+# Solution
+my_filter <- function(x, threshold = 1, scalar = 5) {
+  x[x >= threshold] <- NA 
+  x * scalar
+}
+
+c(-5, 5) %>% my_filter()
+```
+
+# 1.6 Task: Untidy Code?
+**Is the code below correct? Can it be improved?**
+
+```{r}
+simulate_phenotype <- function(pop_params, gp_map, gtype) {
+  N = 3
+  pop_mean <- pop_params[1]
+  pop_var <- pop_params[2]
+  pheno <- rnorm(n = N, mean = pop_mean, sd = sqrt(pop_var))
+  effect <- rep(0, times = length(N))
+  
+  for (gt_iter in c('AA', 'AB', 'BB')) {
+    effect[gtype == gt_iter] <- rnorm(n = sum(gtype == gt_iter), 
+                                      mean = gp_map[gt_iter, 'mean_eff'], 
+                                      sd = sqrt(gp_map[gt_iter, 'var_eff']))
+  }
+  dat <- data.frame(gt = gtype, raw_pheno = pheno, effect = effect, pheno = pheno + effect)
+  return(dat)
+}
+
+simulate_phenotype(c(10,10),c(10,10),10)
+```
+
+
+# 2.1 Task: Computing Variance.
+**Write a modular code (function or functions) that computes the sample standard deviation given a vector of numbers.** 
+**Decide how to logically structure the code. Assume there are no built-in R functions for computing mean and variance** **available.
+
+```{r}
+sample_mean <- function(x) {
+  sum(x) / length(x)
+}
+
+sum_squared_deviations <- function(x) {
+  tmp <- (x - sample_mean(x))^2
+  sum(tmp)
+}
+
+variance <- function(x) {
+  sum_squared_deviations(x) / (length(x) -1)
+}
+
+std_dev <- function(x) {
+  sqrt(variance(x))
+}
+
+sample_mean(c(1,2,3,4,5))
+
+sum_squared_deviations(c(1,2,3,4,5))
+
+variance(c(1,2,3,4,5))
+
+std_dev(c(1,2,3,4,5))
+
+
+
+```
+
+ 
+

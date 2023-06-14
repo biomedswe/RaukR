@@ -1,0 +1,40 @@
+---
+title: "git"
+format: html
+editor: visual
+---
+
+```{r}
+library(usethis)
+```
+
+Check your settings
+
+```{r}
+git_sitrep()
+```
+
+Set user name etc. should be the same as on your github.
+
+```{r}
+usethis::use_git_config(user.name = "biomedswe", user.email = "jonas.anderzzon@med.lu.se")
+```
+
+#### Personal Access Token (PAT)
+
+```{r}
+#Takes you to github.com create new token.
+usethis::create_github_token()
+
+#Use to set your new token in your configuration
+gitcreds::gitcreds_set()
+```
+
+## Git with github
+
+-   Create a repository on github from your current RStudio git repository: `usethis::use_github()`
+
+```{r}
+use_github()
+
+```

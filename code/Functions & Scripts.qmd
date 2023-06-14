@@ -1,0 +1,64 @@
+---
+title: "Functions & Scripts"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+## **1 R Functions**
+
+Let's jump right in and create a function. Your function should have it's own *function_name*, atleast two *parameters* one of which with a default argument, code that performs some *operations* on the input and a *return* value. I do encourage you to think about it and make your own function, rather than copying the examples. Examples should be seen more as explanatory, semantic and inspirational.
+
+```{r}
+
+get_size <- function(filename, size) {
+  
+  lt_vector <- seq(from = 5000, to = 115000, by = 5000)
+  ge_vector <- seq(from = 0, to = 110000, by = 5000)
+  memory_vector <- c(20, 28, 35, 45, 50, 55, 65, 70, 75, 90, 95, 100, 105, 110, 120   , 130, 135, 140, 145, 150, 155, 160, 165)
+  
+  i=1
+  while(!(size >= ge_vector[i] && size < lt_vector[i])) {
+    i = i + 1
+  }
+  print(paste(filename, "size:",size, "is greater than or equal to", ge_vector[i], "bytes, but less than", lt_vector[i], "bytes"))
+  print(paste("running ASEP with", memory_vector[i], "GB"))
+  
+  memory_vector[i]
+}
+ 
+memory <- get_size(filename = "H2AZ2", size = 34999)
+
+```
+
+Another example where ellipsis are often used is to pass plot arguments into a function.
+
+Example:
+
+```{r}
+my_plot <- function(...){
+  plot(c(1,2,3),c(1,2,3),...)
+}
+
+my_plot(main="Great title", xlab = "This will be X-label of plot", ylab="Y-label")
+```

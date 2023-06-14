@@ -1,0 +1,23 @@
+# elipses
+
+##### ... has to be something that is recognized by plot()
+```{r}
+customplot <- function(...) {
+  x = 5
+  y = 10
+  plot(x, y, ...)
+  
+}
+
+customplot(main="Plot title")
+.hidden = "hej"
+```
+
+```{r}
+a <- 42
+```
+
+![](https://www.r-project.org/Rlogo.png)
+{width="50%"}
+
+

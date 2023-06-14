@@ -1,0 +1,52 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## S4 classes
+
+S4 classes are more advanced as you actually define the structure of the data within the object of your particular class:
+
+```{r}
+setClass('gene', 
+         representation(name='character', 
+                        coords='numeric')
+         )
+
+.intragenic_region <- setClass(Class = 'intragenic_region', 
+                               slots = c(
+                                 name='character', 
+                                 coords='numeric'
+                               )
+                              )
+
+my.gene <- new('gene', name = 'ANK3', 
+               coords = c(1.4e6, 1.412e6))
+
+# but since SetClass returns a low-level constructor
+my.intra1 <- .intragenic_region(name = 'int1', 
+                  coords = c(1.7e6, 1.717e6))
+```
+
+```{r}
+setMethod('print', 'gene', 
+          function(x) {
+              cat('GENE: ', x@name, ' --> ')
+              cat('[', x@coords, ']')
+          })
+print(my.gene) # and we use the newly defined print
+```
+
+```{r}
+getS3method('summary', 'lm') %>% 
+  head(n = 10)
+
+```
+
+```{r}
+obj <- lm(speed ~ dist, data = cars) 
+class(obj)
+typeof(obj)
+attributes(obj)
+```
